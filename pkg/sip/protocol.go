@@ -162,6 +162,21 @@ func getContactURI(c *config.Config, ip netip.Addr, t Transport) URI {
 	}
 }
 
+func getFromURI(c *config.Config, ip netip.Addr, t Transport) URI {
+	hostname := "" // use signaling IP by default, it's more robust
+	if t == TransportTLS {
+		hostname = c.SIPHostname
+	}
+	if c.SIPFromHostname != "" {
+		hostname = c.SIPFromHostname
+	}
+	return URI{
+		Host:      hostname,
+		Addr:      netip.AddrPortFrom(ip, uint16(transportPort(c, t))),
+		Transport: t,
+	}
+}
+
 func sendAndACK(ctx context.Context, c Signaling, req *sip.Request) {
 	tx, err := c.Transaction(req)
 	if err != nil {

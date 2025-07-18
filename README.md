@@ -154,12 +154,22 @@ brew install pkg-config opus opusfile libsoxr
 
 For more instructions see [hraban/opus' README](https://github.com/hraban/opus#build--installation)
 
+Use befor commands if just install Go:
+```
+export PATH=$PATH:/usr/local/go/bin:~/go/bin
+```
+
+Install mage:
+```
+export PATH=$PATH:/usr/local/go/bin:~/go/bin && go install github.com/magefile/mage@latest
+```
+
 ##### Building
 
 Build the SIP service by running:
 
 ```shell
-mage build
+export PATH=$PATH:/usr/local/go/bin:~/go/bin && mage build
 ````
 
 ##### Running the service
@@ -176,7 +186,7 @@ redis:
 ```
 
 ```shell
-sip --config=config.yaml
+export PATH=$PATH:/usr/local/go/bin:~/go/bin && sip --config=config.yaml
 ```
 
 #### Running with Docker

@@ -123,6 +123,10 @@ func (c *Client) ContactURI(tr Transport) URI {
 	return getContactURI(c.conf, c.sconf.SignalingIP, tr)
 }
 
+func (c *Client) FromURI(tr Transport) URI {
+	return getFromURI(c.conf, c.sconf.SignalingIP, tr)
+}
+
 func (c *Client) CreateSIPParticipant(ctx context.Context, req *rpc.InternalCreateSIPParticipantRequest) (*rpc.InternalCreateSIPParticipantResponse, error) {
 	ctx, span := tracer.Start(ctx, "Client.CreateSIPParticipant")
 	defer span.End()

@@ -1,0 +1,11 @@
+api_key: 'livekit_api_devkey'
+api_secret: 'livekit_api_devsecret'
+ws_url: 'ws://localhost:7002'
+redis:
+  address: 'localhost:7004'
+sip_port: 5060
+sip_from_hostname: 'sip.exolve.ru'
+rtp_port: 10000-20000
+use_external_ip: true
+logging:
+  level: debug

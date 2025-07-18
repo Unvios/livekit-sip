@@ -67,6 +67,7 @@ type Config struct {
 	SIPPort            int                 `yaml:"sip_port"`        // announced SIP signaling port
 	SIPPortListen      int                 `yaml:"sip_port_listen"` // SIP signaling port to listen on
 	SIPHostname        string              `yaml:"sip_hostname"`
+	SIPFromHostname    string              `yaml:"sip_from_hostname"` // hostname for From header (optional)
 	SIPRingingInterval time.Duration       `yaml:"sip_ringing_interval"` // from 1 sec up to 60 (default '1s')
 	TLS                *TLSConfig          `yaml:"tls"`
 	RTPPort            rtcconfig.PortRange `yaml:"rtp_port"`

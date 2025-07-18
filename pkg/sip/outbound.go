@@ -96,9 +96,14 @@ func (c *Client) newCall(ctx context.Context, conf *config.Config, log logger.Lo
 
 	tr := TransportFrom(sipConf.transport)
 	contact := c.ContactURI(tr)
+	from := c.FromURI(tr)
 	if sipConf.host == "" {
 		sipConf.host = contact.GetHost()
 	}
+	// Add username to contact URI for outbound calls
+	contactWithUser := contact
+	contactWithUser.User = sipConf.from
+	
 	call := &outboundCall{
 		c:         c,
 		log:       log,
@@ -110,10 +115,13 @@ func (c *Client) newCall(ctx context.Context, conf *config.Config, log logger.Lo
 	call.log = call.log.WithValues("jitterBuf", call.jitterBuf)
 	call.cc = c.newOutbound(log, id, URI{
 		User:      sipConf.from,
-		Host:      sipConf.host,
-		Addr:      contact.Addr,
+		// Host:      sipConf.host,
+		// Addr:      contact.Addr,
+		Host:      from.GetHost(),
+		Addr:      from.Addr,
 		Transport: tr,
-	}, contact, func(headers map[string]string) map[string]string {
+	// }, contact, func(headers map[string]string) map[string]string {
+	}, contactWithUser, func(headers map[string]string) map[string]string {
 		c := call
 		if len(c.sipConf.attrsToHeaders) == 0 {
 			return headers
