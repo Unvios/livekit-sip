@@ -24,6 +24,12 @@ Currently, the following features are supported:
 - Digest Authentication
 - Touch Tone (Sending and Reading DTMF)
 
+## Test/Debug
+
+For making calls you can use https://www.zoiper.com
+
+To debug SIP you can use https://github.com/irontec/sngrep. With this tool you can see all SIP requests on your machine and compare them.
+
 ## Documentation
 
 ### Workflow
