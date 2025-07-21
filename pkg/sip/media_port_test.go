@@ -74,16 +74,23 @@ func (c *testUDPConn) SetWriteDeadline(t time.Time) error {
 func (c *testUDPConn) ReadFromUDPAddrPort(buf []byte) (int, netip.AddrPort, error) {
 	peer := c.peer.Load()
 	if peer == nil {
+		logger.Infow("ReadFromUDPAddrPort: peer is nil", "self_addr", c.addr, "info", "peer is nil, returning ErrClosedPipe")
 		return 0, netip.AddrPort{}, io.ErrClosedPipe
 	}
 	select {
 	case <-c.closed:
+		logger.Infow("ReadFromUDPAddrPort: connection closed", "self_addr", c.addr, "peer_addr", peer.addr, "info", "closed channel, returning ErrClosedPipe")
 		return 0, netip.AddrPort{}, io.ErrClosedPipe
 	case data := <-c.buf:
 		n := copy(buf, data)
 		var err error
 		if n < len(data) {
 			err = io.ErrShortBuffer
+		}
+		// Логируем пир, его адрес, валидность, IP и порт
+		logger.Infow("ReadFromUDPAddrPort: data received", "self_addr", c.addr, "peer_addr", peer.addr, "peer_valid", peer.addr.IsValid(), "peer_ip", peer.addr.Addr(), "peer_port", peer.addr.Port(), "data_len", len(data), "copied", n, "err", err)
+		if !peer.addr.IsValid() {
+			logger.Warnw("ReadFromUDPAddrPort: invalid peer.AddrPort returned!", nil, "peer_addr", peer.addr, "self_addr", c.addr)
 		}
 		return n, peer.addr, err
 	}
