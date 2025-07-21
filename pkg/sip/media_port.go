@@ -94,6 +94,23 @@ func (c *udpConn) SetDst(addr netip.AddrPort) {
 
 func (c *udpConn) Read(b []byte) (n int, err error) {
 	n, addr, err := c.ReadFromUDPAddrPort(b)
+	
+	// Логируем детали о ReadFromUDPAddrPort
+	c.log.Infow("ReadFromUDPAddrPort called", 
+		"addr", addr.String(), 
+		"addr_valid", addr.IsValid(), 
+		"addr_ip", addr.Addr(), 
+		"addr_port", addr.Port(), 
+		"bytes_read", n, 
+		"error", err)
+	
+	if !addr.IsValid() {
+		c.log.Warnw("ReadFromUDPAddrPort returned invalid AddrPort!", nil, 
+			"addr", addr.String(), 
+			"addr_ip", addr.Addr(), 
+			"addr_port", addr.Port())
+	}
+	
 	prev := c.src.Swap(&addr)
 	if prev == nil || !prev.IsValid() {
 		c.log.Infow("setting media source", "addr", addr.String())
